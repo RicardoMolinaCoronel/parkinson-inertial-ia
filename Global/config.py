@@ -1,0 +1,12 @@
+raw_data_path = 'RAW_DATA'
+segmented_data_path = 'SEGMENTED_DATA'
+parkinson_raw_data_directory = 'PAC-PARKINSON'
+no_parkinson_raw_data_directory = 'CTL-PSANO'
+raw_data_path_parkinson = raw_data_path + '/' + parkinson_raw_data_directory
+raw_data_path_no_parkinson = raw_data_path + '/' + no_parkinson_raw_data_directory
+parkinson_segmented_data_directory = 'PAC-PARKINSON'
+no_parkinson_segmented_data_directory = 'CTL-PSANO'
+turns_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/TURNS'
+walking_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/WALKING'
+turns_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segmented_data_directory + '/TURNS'
+walking_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segmented_data_directory + '/WALKING'

@@ -1,7 +1,10 @@
 import json
-
+import Global.config as config
 # Función para filtrar los datos según múltiples rangos de "millis"
-nombre_archivo=''
+nombre_archivo='f18c0cd7-1238-4a86-a3f5-29b46a684e9c'
+variableTiempo = 't'
+rangos = [(10000, 11500), (20450, 22000), (29600, 31500)]
+#rangos = [(8200, 10400)]
 def filtrar_por_multiples_rangos(data, rangos):
     # Diccionarios para almacenar los datos dentro de los rangos y fuera de ellos
     datos_dentro_de_rangos = {f'rango_{i+1}': {} for i in range(len(rangos))}
@@ -19,7 +22,7 @@ def filtrar_por_multiples_rangos(data, rangos):
             agregado_a_rango = False
             # Revisar si el elemento pertenece a alguno de los rangos
             for i, (rango_min, rango_max) in enumerate(rangos):
-                if rango_min <= elemento['millis'] <= rango_max:
+                if rango_min <= elemento[variableTiempo] <= rango_max:
                     datos_dentro_de_rangos[f'rango_{i+1}'][clave].append(elemento)
                     agregado_a_rango = True
                     break
@@ -30,22 +33,22 @@ def filtrar_por_multiples_rangos(data, rangos):
     return datos_dentro_de_rangos, datos_fuera_de_todos_los_rangos
 
 # Leer el archivo JSON
-with open('C:/Users/Ricardo/Desktop/Espol/SFINAL/Materia Integradora/Datos/PAC - PARKINSON/'+nombre_archivo+'.json', 'r') as archivo_json:
+with open(config.normalized_data_path_no_parkinson + '/' +nombre_archivo+'.json', 'r') as archivo_json:
     datos = json.load(archivo_json)
 
 # Definir múltiples rangos de tiempo (cada tupla es un rango: (rango_min, rango_max))
-rangos = [(50000, 53000), (53001, 53500), (53501, 54000)]  # Ejemplo de tres rangos
+ # Ejemplo de tres rangos
 
 # Filtrar los datos por los múltiples rangos
 datos_dentro_rangos, datos_fuera_rangos = filtrar_por_multiples_rangos(datos, rangos)
 
 # Exportar los datos dentro de cada rango a archivos separados
 for i in range(len(rangos)):
-    with open(f'datos_rango_{i+1}.json', 'w') as archivo_dentro:
+    with open(config.turns_data_path_no_parkinson + '/' + nombre_archivo + f'_t{i+1}.json', 'w') as archivo_dentro:
         json.dump(datos_dentro_rangos[f'rango_{i+1}'], archivo_dentro, indent=4)
 
 # Exportar los datos que no pertenecen a ningún rango a un solo archivo
-with open('datos_fuera_de_todos_los_rangos.json', 'w') as archivo_fuera:
+with open(config.walking_data_path_no_parkinson + '/' + nombre_archivo + '.json', 'w') as archivo_fuera:
     json.dump(datos_fuera_rangos, archivo_fuera, indent=4)
 
 print(f"Datos exportados correctamente a archivos para cada rango y un archivo fuera de rangos.")

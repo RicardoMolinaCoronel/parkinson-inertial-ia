@@ -44,7 +44,7 @@ def procesar_archivo(json_file):
 
 
 # Directorio donde están los archivos JSON de los pacientes
-directorio = config.raw_data_path_parkinson
+directorio = config.walking_data_path_parkinson
 
 # Diccionarios para almacenar las medias de cada variable por sección
 medias_derecha = {'a': [], 'b': [], 'g': [], 'x': [], 'y': [], 'z': []}

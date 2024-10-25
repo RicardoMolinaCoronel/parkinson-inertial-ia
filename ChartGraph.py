@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import CheckButtons
 import Global.config as config
 
-with open(config.turns_data_path_no_parkinson+ '/f982b990-6be1-4968-87e6-0c169dcefe08_t3' + '.json', 'r') as file:
+with open(config.walking_data_path_no_parkinson + '/procesado_d7984c4d-81d0-4f87-8495-23d84974f79d' + '.json', 'r') as file:
     data = json.load(file)
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))

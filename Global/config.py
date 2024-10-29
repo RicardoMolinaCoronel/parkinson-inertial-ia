@@ -4,6 +4,12 @@ no_parkinson_raw_data_directory = 'CTL-PSANO'
 raw_data_path_parkinson = raw_data_path + '/' + parkinson_raw_data_directory
 raw_data_path_no_parkinson = raw_data_path + '/' + no_parkinson_raw_data_directory
 
+discarded_data_path = 'DISCARDED_DATA'
+parkinson_discarded_data_directory = 'PAC-PARKINSON'
+no_parkinson_discarded_data_directory = 'CTL-PSANO'
+discarded_data_path_parkinson = discarded_data_path + '/' + parkinson_discarded_data_directory
+discarded_data_path_no_parkinson = discarded_data_path + '/' + no_parkinson_discarded_data_directory
+
 normalized_data_path = 'NORMALIZED_DATA'
 parkinson_normalized_data_directory = 'normalizadoPARKINSON'
 no_parkinson_normalized_data_directory = 'normalizadoSANO'

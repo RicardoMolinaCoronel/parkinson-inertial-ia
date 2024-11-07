@@ -1,0 +1,132 @@
+import json
+from pathlib import Path
+import numpy as np
+from scipy.signal import find_peaks
+import matplotlib.pyplot as plt
+
+class StepCounter:
+    def __init__(self, folder_path):
+       
+        self.folder_path = Path(folder_path)
+        self.data = {}
+        self.steps_per_sensor = {}
+        
+    def load_data(self):
+       
+        json_files = list(self.folder_path.glob('*.json'))
+        
+        if not json_files:
+            print(f"No JSON files found in {self.folder_path}")
+            return
+            
+        print(f"Found {len(json_files)} JSON files")
+        
+        for json_file in json_files:
+            print(f"Processing {json_file.name}...")
+            try:
+                with open(json_file, 'r') as file:
+                    self.data.update(json.load(file))
+            except json.JSONDecodeError:
+                print(f"Error: {json_file.name} is not a valid JSON file")
+            except Exception as e:
+                print(f"Error processing {json_file.name}: {str(e)}")
+    
+    def calculate_magnitude(self, reading):
+        
+        return np.sqrt(reading['x']**2 + reading['y']**2 + reading['z']**2)
+    
+    def detect_steps(self, sensor_data, threshold_factor=1.5, min_distance=20):
+        
+   
+        magnitudes = [self.calculate_magnitude(reading) for reading in sensor_data]
+        timestamps = [reading['t'] for reading in sensor_data]
+        
+  
+        threshold = np.mean(magnitudes) + threshold_factor * np.std(magnitudes)
+        
+
+        peaks, _ = find_peaks(magnitudes, height=threshold, distance=min_distance)
+        
+        step_timestamps = [timestamps[peak] for peak in peaks]
+        return len(peaks), peaks, step_timestamps, magnitudes
+    
+    def analyze_steps(self, visualize=True):
+  
+        if not self.data:
+            self.load_data()
+        
+        for sensor_name, readings in self.data.items():
+            print(f"\nAnalyzing steps for {sensor_name}...")
+            
+            num_steps, peaks, step_timestamps, magnitudes = self.detect_steps(readings)
+            self.steps_per_sensor[sensor_name] = {
+                'total_steps': num_steps,
+                'step_timestamps': step_timestamps
+            }
+            
+            print(f"Detected {num_steps} steps")
+            
+            if visualize:
+                self.visualize_steps(sensor_name, magnitudes, peaks)
+    
+    def visualize_steps(self, sensor_name, magnitudes, peaks):
+        """Create visualization of step detection."""
+        plt.figure(figsize=(15, 5))
+        plt.plot(magnitudes, label='Acceleration Magnitude')
+        plt.plot(peaks, [magnitudes[p] for p in peaks], 'ro', label='Detected Steps')
+        plt.title(f'Step Detection - {sensor_name}')
+        plt.xlabel('Sample Number')
+        plt.ylabel('Acceleration Magnitude')
+        plt.legend()
+        
+        # Save the plot
+        output_dir = self.folder_path / 'step_analysis'
+        output_dir.mkdir(exist_ok=True)
+        plt.savefig(output_dir / f'{sensor_name}_steps.png')
+        plt.close()
+    
+    def save_results(self):
+        """Save the step analysis results to a JSON file."""
+        if not self.steps_per_sensor:
+            print("No results to save. Run analyze_steps() first.")
+            return
+            
+        output_dir = self.folder_path / 'step_analysis'
+        output_dir.mkdir(exist_ok=True)
+        
+        results = {
+            'summary': {
+                sensor: {
+                    'total_steps': data['total_steps'],
+                    'average_step_interval': self.calculate_average_interval(data['step_timestamps'])
+                }
+                for sensor, data in self.steps_per_sensor.items()
+            },
+            'detailed': self.steps_per_sensor
+        }
+        
+        output_file = output_dir / 'step_analysis_results.json'
+        with open(output_file, 'w') as f:
+            json.dump(results, f, indent=2)
+        print(f"\nResults saved to {output_file}")
+    
+    def calculate_average_interval(self, timestamps):
+        """Calculate average interval between steps in milliseconds."""
+        if len(timestamps) < 2:
+            return 0
+        intervals = [t2 - t1 for t1, t2 in zip(timestamps[:-1], timestamps[1:])]
+        return sum(intervals) / len(intervals)
+
+def main():
+    
+    folder_path = '\parkinson-inertial-ia/SEGMENTED_DATA/PAC-PARKINSON/WALKING/e728e2fe-538b-4bbf-9984-761fe22d0ce8.json'
+    
+    counter = StepCounter(folder_path)
+    
+   
+    counter.analyze_steps(visualize=True)
+    
+    counter.save_results()
+
+if __name__ == "__main__":
+    main()

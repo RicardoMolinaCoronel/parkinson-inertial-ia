@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import CheckButtons
 import Global.config as config
 
-with open(config.normalized_data_path_parkinson + '/a535059c-6318-4b2f-9c35-3fc836988106' + '.json', 'r') as file:
+with open(config.raw_data_path_no_parkinson + '/archivo_filtrado' + '.json', 'r') as file:
     data = json.load(file)
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))
 plt.subplots_adjust(left=0.1, bottom=0.1, right=0.75, top=0.9, hspace=0.3)
 variables = ['a', 'b', 'g', 'x', 'y', 'z']
-#sensors = ['derecha', 'izquierda', 'espina_base']
 sensors = ['derecha', 'izquierda', 'espina_base']
+#sensors = ['derecha']
 sensor_colors = {
     'derecha': {'a': 'red', 'b': 'green', 'g': 'blue', 'x': 'red', 'y': 'green', 'z': 'blue'},
     'izquierda': {'a': 'darkred', 'b': 'darkgreen', 'g': 'darkblue', 'x': 'darkred', 'y': 'darkgreen', 'z': 'darkblue'},

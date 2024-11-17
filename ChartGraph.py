@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import CheckButtons
 import Global.config as config
 
+
 with open(config.raw_data_path_no_parkinson + '/archivo_filtrado' + '.json', 'r') as file:
     data = json.load(file)
 

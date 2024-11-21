@@ -23,3 +23,11 @@ turns_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data
 walking_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/WALKING'
 turns_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segmented_data_directory + '/TURNS'
 walking_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segmented_data_directory + '/WALKING'
+
+filtered_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/WALKING_FILTERED'
+filtered_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segmented_data_directory + '/WALKING_FILTERED'
+
+p_walking_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/WALKING_PARTS'
+p_walking_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segmented_data_directory + '/WALKING_PARTS'
+
+rdced_walking_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/WALKING_REDUCED'

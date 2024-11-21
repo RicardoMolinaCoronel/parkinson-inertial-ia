@@ -87,7 +87,7 @@ def procesar_archivos_json_y_rangos(carpeta_json, archivo_rangos_txt):
 carpeta_json = config.normalized_data_path_parkinson
 
 # Ruta al archivo .txt con los rangos de tiempo
-archivo_rangos_txt = 'C:/Users/Ricardo/Desktop/Espol/SFINAL/Materia Integradora/RangosTiempoParkinson.txt'
+archivo_rangos_txt = 'C:/Users/Ricardo/Desktop/Espol/SFINAL/Materia Integradora/RangosCInicioTiempoParkinson.txt'
 
 # Procesar los archivos
 procesar_archivos_json_y_rangos(carpeta_json, archivo_rangos_txt)

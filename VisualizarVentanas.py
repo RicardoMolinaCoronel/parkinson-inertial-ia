@@ -36,12 +36,12 @@ def load_and_visualize_json(file_path):
             plt.show()
 
             # Limitar la cantidad de ventanas mostradas
-            if i >= 2:  # Cambia este valor para visualizar más ventanas
+            if i >= 29:  # Cambia este valor para visualizar más ventanas
                 break
 
 
 # Ruta del archivo JSON generado
-file_path = config.p_walking_data_path_parkinson+'/2940571b-a981-413e-960f-76b27b322ee4.json'
+file_path = config.p_walking_data_path_parkinson+'/8673958f-1c7a-4dbb-9ae8-427e882de03a.json'
 
 # Cargar y visualizar
 load_and_visualize_json(file_path)

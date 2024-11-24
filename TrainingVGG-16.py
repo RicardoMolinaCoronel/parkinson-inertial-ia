@@ -17,8 +17,8 @@ LEARNING_RATE = 0.0001
 # Rutas de las carpetas
 WAVELET_DIR = config.prep_data_path # Carpeta raíz que contiene las imágenes
 LABELS = {
-    "PAC-PARKINSON/WAVELETS": 1,
-    "CTL-PSANO/WAVELETS": 0
+    "PAC-PARKINSON\WAVELETS": 1,
+    "CTL-PSANO\WAVELETS": 0
 }
 
 # Función para cargar imágenes y combinarlas en 3 canales
@@ -34,16 +34,18 @@ def load_wavelet_triplet(wavelet_dir, file_names):
         np.ndarray: Tensor 3D con los tres canales combinados (formato RGB).
     """
     channels = []
-    for channel in ['b', 'g', 'z']:
+    for channel in ['b']:
+        print(file_names[channel])
         file_path = file_names[channel]
-        img = Image.open(file_path).resize(IMG_SIZE)  # Asegurarse de que todas las imágenes tienen el mismo tamaño
+        img = Image.open(file_path).convert("RGB").resize(IMG_SIZE)  # Asegurarse de que todas las imágenes tienen el mismo tamaño
         img = np.array(img) / 255.0  # Normalizar a [0, 1]
         channels.append(img)
 
     # Combinar los tres canales
-    combined_image = np.stack(channels, axis=-1)  # Combina como (224, 224, 3)
+    #combined_scalogram = (channels[0] + channels[1] + channels[2]) / 3 # Combina como (224, 224, 3)
+    combined_scalogram = channels[0]
     #print(combined_image.size)
-    return combined_image
+    return combined_scalogram
 
 # Función para preparar los datos
 def prepare_data(wavelet_dir, labels):
@@ -108,7 +110,8 @@ for layer in base_model.layers:
 # Añadir capas personalizadas
 x = base_model.output
 x = Flatten()(x)
-x = Dense(256, activation="relu")(x)
+x = Dense(128, activation="relu")(x)
+x = Dense(64, activation="relu")(x)
 x = Dropout(0.5)(x)
 predictions = Dense(1, activation="sigmoid")(x)
 

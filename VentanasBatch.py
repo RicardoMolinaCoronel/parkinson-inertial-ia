@@ -24,7 +24,7 @@ def temporal_transformation(data, method="normalize"):
     else:
         return data
 
-def process_imu_data(file_path, window_duration=2000, overlap=0.5, upsampling_interval=10, max_gap=120):
+def process_imu_data(file_path, window_duration=1950, overlap=0.5, upsampling_interval=15, max_gap=120):
     print(file_path)
     """
     Procesa los datos de señales IMU aplicando filtros, ruido, transformaciones,

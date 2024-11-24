@@ -31,3 +31,10 @@ p_walking_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_
 p_walking_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segmented_data_directory + '/WALKING_PARTS'
 
 rdced_walking_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/WALKING_REDUCED'
+
+prep_data_path = 'PREPROCESSED_DATA'
+parkinson_prep_data_directory = 'PAC-PARKINSON'
+no_parkinson_prep_data_directory = 'CTL-PSANO'
+wavelets_data_path_parkinson = prep_data_path + '/' + parkinson_prep_data_directory + '/WAVELETS'
+wavelets_data_path_no_parkinson = prep_data_path + '/' + no_parkinson_prep_data_directory + '/WAVELETS'
+

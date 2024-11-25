@@ -13,11 +13,12 @@ x=0
 
 
 # Función para preprocesar datos
-def preprocess_data(features):
+def preprocess_data(X_train, X_test):
     # Aplicar StandardScaler
     scaler = StandardScaler()
-    features_scaled = scaler.fit_transform(features)
-    return features_scaled
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+    return X_train_scaled, X_test_scaled
 
 # Función para cargar y procesar archivos JSON
 def load_features_from_folders(folder_0, folder_1):
@@ -64,10 +65,8 @@ def load_features_from_folders(folder_0, folder_1):
 
 
 # Función para crear y entrenar la MLP
-def train_mlp(features, labels, model_path):
-    # Dividir datos en entrenamiento y prueba
-    X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
-    print(X_train.shape)
+def train_mlp(X_train, X_test, y_train, y_test, labels, model_path):
+
     # Crear el modelo MLP
     model = Sequential([
         Dense(256, activation='relu', input_shape=(X_train.shape[1],)),
@@ -82,7 +81,7 @@ def train_mlp(features, labels, model_path):
     optimizer = Adam(learning_rate=0.0001)
     model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
     # Entrenamiento
-    model.fit(X_train, y_train, epochs=500, batch_size=32, validation_split=0.2)
+    model.fit(X_train, y_train, epochs=700, batch_size=32, validation_split=0.2)
 
     # Evaluar el modelo en el conjunto de prueba
     test_loss, test_accuracy = model.evaluate(X_test, y_test)
@@ -99,13 +98,20 @@ def train_mlp(features, labels, model_path):
 folder_0 = config.p_walking_data_path_no_parkinson  # Reemplaza con la ruta de la carpeta con label 0
 folder_1 = config.p_walking_data_path_parkinson  # Reemplaza con la ruta de la carpeta con label 1
 
+
+
 # Procesar datos
 features, labels = load_features_from_folders(folder_0, folder_1)
 
-# Preprocesar datos
-features_preprocessed = preprocess_data(features)
+# Dividir datos en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(features, labels, test_size=0.2, random_state=42)
+print(X_train.shape)
+
+
+# Preprocesar datos (fit en entrenamiento, transform en prueba)
+X_train_preprocessed, X_test_preprocessed = preprocess_data(X_train, X_test)
 
 
 # Entrenar MLP
-model = train_mlp(features_preprocessed, labels, model_path='MODELS/model.h5')
+model = train_mlp(X_train_preprocessed, X_test_preprocessed, y_train, y_test, labels, model_path='MODELS/model2.keras')
 

@@ -24,7 +24,7 @@ def cwt_to_image(signal, wavelet='cmor2.0-0.8', scale_factor=1):
     coefficients, freqs = pywt.cwt(signal, scales, wavelet)
     return np.abs(coefficients)
 
-def process_windows_to_wavelet(input_folder, output_folder, sampling_interval=15, window_duration=1950):
+def process_windows_to_wavelet(input_folder, output_folder, sampling_interval=21, window_duration=1950):
     """
     Procesa ventanas de señales para generar transformadas wavelet.
 
@@ -56,7 +56,7 @@ def process_windows_to_wavelet(input_folder, output_folder, sampling_interval=15
                 t = np.arange(0, window_duration, sampling_interval)  # Vector de tiempo
 
                 # Procesar cada señal específica
-                for signal_name in ['b', 'g', 'z']:
+                for signal_name in ['a', 'b', 'g', 'x', 'y', 'z']:
                     signal = np.array([entry[signal_name] for entry in window["data"]])
 
                     # Reescalar la señal si es necesario
@@ -90,8 +90,16 @@ def process_windows_to_wavelet(input_folder, output_folder, sampling_interval=15
         print(f"Procesado archivo: {file_name}")
 
 # Carpetas de entrada y salida
+input_folder = config.p_walking_data_path_no_parkinson  # Carpeta con archivos JSON de ventanas
+output_folder = config.wavelets1_data_path_no_parkinson  # Carpeta para guardar imágenes wavelet
+
+# Procesar los archivos
+process_windows_to_wavelet(input_folder, output_folder)
+
+
+# Carpetas de entrada y salida
 input_folder = config.p_walking_data_path_parkinson  # Carpeta con archivos JSON de ventanas
-output_folder = config.wavelets_data_path_parkinson  # Carpeta para guardar imágenes wavelet
+output_folder = config.wavelets1_data_path_parkinson  # Carpeta para guardar imágenes wavelet
 
 # Procesar los archivos
 process_windows_to_wavelet(input_folder, output_folder)

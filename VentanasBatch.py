@@ -66,6 +66,7 @@ def process_imu_data(file_path, window_duration=1950, overlap=0.5, upsampling_in
         segments = []
         for _, segment_data in df.groupby('segment'):
             if segment_data['t'].size > 1:  # Solo considerar segmentos con más de un punto
+                '''
                 start_time = segment_data['t'].min()
                 end_time = segment_data['t'].max()
 
@@ -78,21 +79,22 @@ def process_imu_data(file_path, window_duration=1950, overlap=0.5, upsampling_in
                 segment_data.interpolate(method='linear', inplace=True)
                 segment_data.fillna(method='bfill', inplace=True)
                 segment_data.fillna(method='ffill', inplace=True)
-
+                '''
                 # Aplicar el filtro paso bajo a cada eje
+                '''
                 for col in ['a', 'b', 'g', 'x', 'y', 'z']:
                     segment_data[col].interpolate(method='linear', inplace=True)
                     segment_data[col].fillna(method='bfill', inplace=True)
                     segment_data[col].fillna(method='ffill', inplace=True)
                     segment_data[col] = low_pass_filter(segment_data[col])
-
+                '''
                 # Añadir ruido gaussiano
-                for col in ['a', 'b', 'g', 'x', 'y', 'z']:
-                    segment_data[col] = add_gaussian_noise(segment_data[col])
+                #for col in ['a', 'b', 'g', 'x', 'y', 'z']:
+                    #segment_data[col] = add_gaussian_noise(segment_data[col])
 
                 # Aplicar transformaciones temporales
-                for col in ['a', 'b', 'g', 'x', 'y', 'z']:
-                    segment_data[col] = temporal_transformation(segment_data[col])
+                #for col in ['a', 'b', 'g', 'x', 'y', 'z']:
+                    #segment_data[col] = temporal_transformation(segment_data[col])
 
                 segments.append(segment_data)
 
@@ -163,9 +165,18 @@ def process_all_files_in_folder(input_folder, output_folder):
 
         print(f"Archivo procesado guardado en: {output_path}")
 
+
 # Carpeta de entrada y salida
 input_folder = config.rdced_walking_data_path_parkinson
 output_folder = config.p_walking_data_path_parkinson
 
 # Procesar todos los archivos en la carpeta
 process_all_files_in_folder(input_folder, output_folder)
+'''
+# Carpeta de entrada y salida
+input_folder = config.walking_data_path_no_parkinson
+output_folder = config.p_walking_data_path_no_parkinson
+
+# Procesar todos los archivos en la carpeta
+process_all_files_in_folder(input_folder, output_folder)
+'''

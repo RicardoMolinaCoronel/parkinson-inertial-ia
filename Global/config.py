@@ -37,4 +37,5 @@ parkinson_prep_data_directory = 'PAC-PARKINSON'
 no_parkinson_prep_data_directory = 'CTL-PSANO'
 wavelets_data_path_parkinson = prep_data_path + '/' + parkinson_prep_data_directory + '/WAVELETS'
 wavelets_data_path_no_parkinson = prep_data_path + '/' + no_parkinson_prep_data_directory + '/WAVELETS'
-
+wavelets1_data_path_parkinson = prep_data_path + '/' + parkinson_prep_data_directory + '/WAVELETS1'
+wavelets1_data_path_no_parkinson = prep_data_path + '/' + no_parkinson_prep_data_directory + '/WAVELETS1'

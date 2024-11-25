@@ -41,7 +41,7 @@ def load_and_visualize_json(file_path):
 
 
 # Ruta del archivo JSON generado
-file_path = config.p_walking_data_path_parkinson+'/8673958f-1c7a-4dbb-9ae8-427e882de03a.json'
+file_path = config.p_walking_data_path_no_parkinson+'/c2cad4cd-9857-4493-9954-82567e2d185a.json'
 
 # Cargar y visualizar
 load_and_visualize_json(file_path)

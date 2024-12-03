@@ -33,7 +33,7 @@ def filtrar_por_multiples_rangos(data, rangos):
     return datos_dentro_de_rangos, datos_fuera_de_todos_los_rangos
 
 # Leer el archivo JSON
-with open(config.normalized_data_path_no_parkinson + '/' +nombre_archivo+'.json', 'r') as archivo_json:
+with open(config.raw_data_path_no_parkinson + '/' +nombre_archivo+'.json', 'r') as archivo_json:
     datos = json.load(archivo_json)
 
 # Definir múltiples rangos de tiempo (cada tupla es un rango: (rango_min, rango_max))

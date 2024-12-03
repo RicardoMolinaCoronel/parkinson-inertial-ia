@@ -71,11 +71,11 @@ def procesar_archivos_json_y_rangos(carpeta_json, archivo_rangos_txt):
 
             # Exportar los datos dentro de cada rango a archivos separados
             for i in range(len(rangos)):
-                with open(config.turns_data_path_no_parkinson + '/' + f'{nombre_archivo}_t{i + 1}.json', 'w') as archivo_dentro:
+                with open(config.turns_data_path_parkinson + '/' + f'{nombre_archivo}_t{i + 1}.json', 'w') as archivo_dentro:
                     json.dump(datos_dentro_rangos[f'rango_{i + 1}'], archivo_dentro, indent=4)
 
             # Exportar los datos que no pertenecen a ningún rango a un solo archivo
-            with open(config.walking_data_path_no_parkinson + '/' + f'{nombre_archivo}.json', 'w') as archivo_fuera:
+            with open(config.walking_data_path_parkinson + '/' + f'{nombre_archivo}.json', 'w') as archivo_fuera:
                 json.dump(datos_fuera_rangos, archivo_fuera, indent=4)
 
             print(f"Procesado archivo {archivo_json} con los rangos especificados.")
@@ -84,10 +84,10 @@ def procesar_archivos_json_y_rangos(carpeta_json, archivo_rangos_txt):
 
 
 # Directorio donde están los archivos JSON
-carpeta_json = config.normalized_data_path_no_parkinson+'/descartado'
+carpeta_json = config.raw_data_path_parkinson
 
 # Ruta al archivo .txt con los rangos de tiempo
-archivo_rangos_txt = 'C:/Users/Ricardo/PycharmProjects/TESIS/VARIOS/RangosNoPPosibleRuido.txt'
+archivo_rangos_txt = 'C:/Users/Ricardo/PycharmProjects/TESIS/VARIOS/RangosCInicioTiempoParkinson.txt'
 
 # Procesar los archivos
 procesar_archivos_json_y_rangos(carpeta_json, archivo_rangos_txt)

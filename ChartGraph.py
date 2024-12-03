@@ -4,7 +4,7 @@ from matplotlib.widgets import CheckButtons
 import Global.config as config
 
 
-with open(config.walking_data_path_parkinson+ '/452a6277-c720-4f4d-8579-8b51e38203a3.json', 'r') as file:
+with open(config.normalized_data_path_parkinson+ '/4c291776-a63d-401c-aa21-ab2ac894bd36.json', 'r') as file:
     data = json.load(file)
 
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 10))

@@ -104,7 +104,7 @@ def extract_features_from_window(window, wavelet='db4', fs=50):
         #print(signal_data)
         # Aplicar DWT (hasta el nivel máximo permitido)
         coeffs = pywt.wavedec(signal_data, wavelet=wavelet, level=None)
-
+        #print(f"Cantidad de subbandas generadas: {len(coeffs)}")
         # Extraer características de las subbandas
         signal_features = extract_features_from_subbands(coeffs, fs=fs)
 
@@ -117,7 +117,7 @@ def extract_features_from_window(window, wavelet='db4', fs=50):
 # Procesar datos de múltiples sensores
 def process_sensor_data(json_data, interval=20, window_size=100, overlap=0.5, max_gap=1000):
     processed_data = {}
-    cutoff = 10
+    cutoff = 12
     target_frequency = 50
     for sensor, readings in json_data.items():
         segments = split_by_large_gaps(readings, max_gap=max_gap)
@@ -125,11 +125,22 @@ def process_sensor_data(json_data, interval=20, window_size=100, overlap=0.5, ma
         for segment in segments:
             uniform_data = uniformize_data(segment, interval=interval)
             # Aplicación del filtro Butterworth a las columnas de interés
-            for col in ['a', 'b', 'g', 'x', 'y', 'z']:
-                uniform_data[col] = butter_lowpass_filter(uniform_data[col], cutoff, target_frequency)
+            #for col in ['a', 'b', 'g', 'x', 'y', 'z']:
+            #    uniform_data[col] = butter_lowpass_filter(uniform_data[col], cutoff, target_frequency)
 
             windows = create_windows_with_fixed_size(uniform_data, window_size=window_size, overlap=overlap)
-            processed_segments.append(windows)
+            #print("ENTRE BRO")
+            # Filtrar ventanas con lecturas diferentes a 100
+            filtered_windows = []
+            for idx, window in enumerate(windows):
+                num_readings = len(window['data'])  # Número de lecturas en la ventana
+                if num_readings == window_size:
+                    filtered_windows.append(window)  # Mantener solo ventanas válidas
+                else:
+                    print(f"⚠️ Eliminando ventana {idx} en el sensor {sensor} con {num_readings} lecturas (diferente a {window_size}).")
+
+            processed_segments.append(filtered_windows)
+            #processed_segments.append(windows)
         processed_data[sensor] = processed_segments
     return processed_data
 
@@ -152,7 +163,7 @@ def process_windows_with_features(processed_data, wavelet='db4', fs=50):
     return pd.DataFrame(all_features)
 
 # Leer y procesar todos los archivos JSON de una carpeta
-def process_json_files(input_folder, output_folder, interval=20, window_size=100, overlap=0.5, max_gap=1000):
+def process_json_files(input_folder, output_folder, interval=20, window_size=75, overlap=0.01, max_gap=1000):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
@@ -166,16 +177,18 @@ def process_json_files(input_folder, output_folder, interval=20, window_size=100
 
             # Procesar datos
             processed_data = process_sensor_data(json_data, interval=interval, window_size=window_size, overlap=overlap, max_gap=max_gap)
+
             processed_features = process_windows_with_features(processed_data, wavelet='db4', fs=50)
             features_json = processed_features.to_dict(orient="records")
 
             with open(output_path, "w") as json_file:
-                json.dump(features_json, json_file, indent=4)
+               json.dump(features_json, json_file, indent=4)
             #with open(output_path, 'w') as outfile:
             #    json.dump(processed_data, outfile, indent=4, default=convert_to_serializable)
             print(f"Archivo procesado y guardado: {output_path}")
 
 
+'''
 # Configuración
 input_folder = config.rdced_walking_data_path_parkinson # Ruta a la carpeta de entrada
 output_folder = config.p_walking_data_path_parkinson  # Ruta a la carpeta de salida
@@ -189,3 +202,11 @@ output_folder = config.p_walking_data_path_no_parkinson  # Ruta a la carpeta de 
 
 # Ejecutar el procesamiento
 process_json_files(input_folder, output_folder, interval=20, window_size=100, overlap=0.5, max_gap=1000)
+'''
+
+
+input_folder = config.ftesting_data_path_parkinson # Ruta a la carpeta de entrada
+output_folder = config.ftesting_data_path_parkinson  # Ruta a la carpeta de salida
+
+# Ejecutar el procesamiento
+process_json_files(input_folder, output_folder, interval=20, window_size=100, overlap=0.00, max_gap=1000)

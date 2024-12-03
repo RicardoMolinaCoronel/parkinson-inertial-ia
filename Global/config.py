@@ -29,6 +29,8 @@ filtered_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segme
 
 p_walking_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/WALKING_PARTS'
 p_walking_data_path_no_parkinson = segmented_data_path + '/' + no_parkinson_segmented_data_directory + '/WALKING_PARTS'
+test_p_walking_data_path_parkinson = p_walking_data_path_parkinson + '/test'
+test_p_walking_data_path_no_parkinson = p_walking_data_path_no_parkinson + '/test'
 
 rdced_walking_data_path_parkinson = segmented_data_path + '/' + parkinson_segmented_data_directory + '/WALKING_REDUCED'
 
@@ -39,3 +41,10 @@ wavelets_data_path_parkinson = prep_data_path + '/' + parkinson_prep_data_direct
 wavelets_data_path_no_parkinson = prep_data_path + '/' + no_parkinson_prep_data_directory + '/WAVELETS'
 wavelets1_data_path_parkinson = prep_data_path + '/' + parkinson_prep_data_directory + '/WAVELETS1'
 wavelets1_data_path_no_parkinson = prep_data_path + '/' + no_parkinson_prep_data_directory + '/WAVELETS1'
+
+
+ftesting_data_path = 'F_TESTING_DATA'
+parkinson_ftesting_data_directory = 'PAC-PARKINSON'
+no_parkinson_ftesting_data_directory = 'CTL-PSANO'
+ftesting_data_path_parkinson = ftesting_data_path + '/' + parkinson_ftesting_data_directory
+ftesting_data_path_no_parkinson = ftesting_data_path+ '/' + no_parkinson_ftesting_data_directory

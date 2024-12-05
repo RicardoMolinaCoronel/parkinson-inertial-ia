@@ -91,19 +91,33 @@ def load_features_from_folders_sensors(folder_0, folder_1):
     labels_array = np.array(labels, dtype=int)
 
     return features_array, labels_array
+
+
 def load_features_from_folders(folder_0, folder_1):
     features = []
     labels = []
 
-    # Función para filtrar y limpiar los registros
+    # Diccionario temporal para agrupar ventanas por segment_index y window_index
+    #grouped_segments = {}
+    x=0
+    # Función para filtrar, limpiar y agrupar los registros
     def process_file(file_path, label):
-        global x
+        global x, grouped_segments
+        grouped_segments = {}
         with open(file_path, 'r') as f:
             data = json.load(f)
-            print(file_path)
+
+            # Iterar por cada ventana del archivo
             for window in data:
-                # Filtrar solo si el sensor es "derecha"
-                if window.get("sensor") == "derecha":
+                # Solo procesar ventanas con sensores relevantes
+                sensor = window.get("sensor")
+                if sensor in ["derecha", "izquierda", "espina_base"]:
+                    # Obtener índices de segmento y ventana
+                    segment_index = window.get("segment_index")
+                    window_index = window.get("window_index")
+                    #print(file_path)
+                    #print(segment_index)
+                    #print(window_index)
                     # Eliminar campos innecesarios
                     window.pop("sensor", None)
                     window.pop("segment_index", None)
@@ -111,14 +125,33 @@ def load_features_from_folders(folder_0, folder_1):
                     window.pop("start_time", None)
                     window.pop("end_time", None)
 
-                    # Agregar las características y el label
-                    features.append(list(window.values()))
-                    labels.append(label)
-                if(x==0):
-                    print(file_path)
-                    print(features)
-                x+=1
+                    # Agrupar características por segment_index y window_index
+                    if segment_index not in grouped_segments:
+                        grouped_segments[segment_index] = {}
+                    if window_index not in grouped_segments[segment_index]:
+                        grouped_segments[segment_index][window_index] = {}
+                    grouped_segments[segment_index][window_index][sensor] = list(window.values())
+            #print(file_path)
+            #segment_index =  grouped_segments.items()
+            #print(segment_index)
 
+        # Concatenar características de cada ventana agrupada
+        for segment_index, windows in grouped_segments.items():
+            for window_index, sensors in windows.items():
+                if all(sensor in sensors for sensor in ["derecha", "izquierda", "espina_base"]):
+                    # Concatenar las características de los 3 sensores
+                    if x<7:
+                        print(f"segmented_index:{segment_index}, window_index:{window_index}")
+                    concatenated_features = (
+                        sensors["derecha"] +
+                        sensors["izquierda"] +
+                        sensors["espina_base"]
+                    )
+                    features.append(concatenated_features)
+                    labels.append(label)
+        if x<7:
+            print(file_path)
+            x+=1
     # Leer archivos de la carpeta con label 0
     for file in os.listdir(folder_0):
         file_path = os.path.join(folder_0, file)
@@ -130,7 +163,6 @@ def load_features_from_folders(folder_0, folder_1):
         file_path = os.path.join(folder_1, file)
         if file.endswith('.json'):
             process_file(file_path, 1)
-    x=0
 
     return np.array(features), np.array(labels)
 
@@ -182,6 +214,8 @@ def train_mlp(X_train, X_test, y_train, y_test, model_path):
     '''
     model = Sequential([
         Input(shape=(X_train.shape[1],)),
+        Dense(512, activation='relu', kernel_regularizer=l2(0.005), bias_regularizer=l2(0.005)),
+        Dropout(0.5),
         Dense(256, activation='relu', kernel_regularizer=l2(0.005), bias_regularizer=l2(0.005)),
         Dropout(0.5),
         Dense(128, activation='relu', kernel_regularizer=l1(0.005), bias_regularizer=l2(0.005)),
@@ -253,7 +287,7 @@ X_train_preprocessed, X_test_preprocessed = preprocess_data(X_train, X_test)
 model = train_mlp(X_train_preprocessed, X_test_preprocessed, y_train, y_test, model_path='MODELS/mlp_model_2s_derecha2.best79.keras')
 '''
 # Dividir datos en entrenamiento y prueba
-X_train, X_test, y_train, y_test = train_test_split(features_total, labels_total, shuffle=False, test_size=0.29229062673)
+X_train, X_test, y_train, y_test = train_test_split(features_total, labels_total, shuffle=False, test_size=0.30883444691)
 print(X_train.shape)
 print(X_test.shape)
 # Desordenar los datos de entrenamiento

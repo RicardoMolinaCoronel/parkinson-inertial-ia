@@ -117,7 +117,7 @@ def extract_features_from_window(window, wavelet='db4', fs=50):
 # Procesar datos de múltiples sensores
 def process_sensor_data(json_data, interval=20, window_size=100, overlap=0.5, max_gap=1000):
     processed_data = {}
-    cutoff = 12
+    cutoff = 14
     target_frequency = 50
     for sensor, readings in json_data.items():
         segments = split_by_large_gaps(readings, max_gap=max_gap)
@@ -188,7 +188,7 @@ def process_json_files(input_folder, output_folder, interval=20, window_size=75,
             print(f"Archivo procesado y guardado: {output_path}")
 
 
-'''
+
 # Configuración
 input_folder = config.rdced_walking_data_path_parkinson # Ruta a la carpeta de entrada
 output_folder = config.p_walking_data_path_parkinson  # Ruta a la carpeta de salida
@@ -202,11 +202,11 @@ output_folder = config.p_walking_data_path_no_parkinson  # Ruta a la carpeta de 
 
 # Ejecutar el procesamiento
 process_json_files(input_folder, output_folder, interval=20, window_size=100, overlap=0.5, max_gap=1000)
-'''
 
 
-input_folder = config.ftesting_data_path_parkinson # Ruta a la carpeta de entrada
-output_folder = config.ftesting_data_path_parkinson  # Ruta a la carpeta de salida
+
+#input_folder = config.ftesting_data_path_parkinson # Ruta a la carpeta de entrada
+#output_folder = config.ftesting_data_path_parkinson  # Ruta a la carpeta de salida
 
 # Ejecutar el procesamiento
-process_json_files(input_folder, output_folder, interval=20, window_size=100, overlap=0.00, max_gap=1000)
+#process_json_files(input_folder, output_folder, interval=20, window_size=100, overlap=0.00, max_gap=1000)

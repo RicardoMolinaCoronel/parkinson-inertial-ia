@@ -11,6 +11,7 @@ from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.callbacks import ModelCheckpoint
 from tensorflow.keras.regularizers import l1, l2, l1_l2
 from tensorflow.keras.models import load_model
+from tensorflow.keras.initializers import HeNormal
 from xgboost import XGBClassifier
 from sklearn.metrics import classification_report, roc_auc_score, accuracy_score
 import joblib
@@ -185,10 +186,10 @@ def train_mlp(X_train, X_test, y_train, y_test, model_path):
         Dropout(0.5),
         Dense(128, activation='relu', kernel_regularizer=l1(0.005), bias_regularizer=l2(0.005)),
         Dropout(0.5),
-        Dense(64, activation='relu', kernel_regularizer=l2(0.006), bias_regularizer=l2(0.003)),
+        Dense(64, activation='relu', kernel_regularizer=l2(0.005), bias_regularizer=l2(0.001)),
         Dropout(0.5),
 
-        Dense(1, activation='sigmoid', kernel_regularizer=l1_l2(l1=0.006, l2=0.006))  # Clasificación binaria
+        Dense(1, activation='sigmoid', kernel_regularizer=l1_l2(l1=0.005, l2=0.005))  # Clasificación binaria
     ])
     optimizer = Adam(learning_rate=0.0001)
     model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
@@ -199,7 +200,7 @@ def train_mlp(X_train, X_test, y_train, y_test, model_path):
 
     X_val, X_final_test, y_val, y_final_test = train_test_split(X_test, y_test, test_size=0.5, random_state=42)
 
-    model.fit(X_train, y_train, epochs=2000, batch_size=32, validation_data=(X_val, y_val), callbacks=[checkpointer])
+    model.fit(X_train, y_train, epochs=500, batch_size=32, validation_data=(X_val, y_val), callbacks=[checkpointer])
     #model.fit(X_train, y_train, epochs=250, batch_size=32, callbacks=[checkpointer])
     # Evaluar el modelo en el conjunto de prueba
     model = load_model(model_path)
@@ -217,6 +218,7 @@ def train_mlp(X_train, X_test, y_train, y_test, model_path):
     #print(f"Modelo guardado en {model_path}")
 
     return model
+
 
 
 # Configuración de carpetas
@@ -251,7 +253,7 @@ X_train_preprocessed, X_test_preprocessed = preprocess_data(X_train, X_test)
 model = train_mlp(X_train_preprocessed, X_test_preprocessed, y_train, y_test, model_path='MODELS/mlp_model_2s_derecha2.best79.keras')
 '''
 # Dividir datos en entrenamiento y prueba
-X_train, X_test, y_train, y_test = train_test_split(features_total, labels_total, shuffle=False, test_size=0.36797454931)
+X_train, X_test, y_train, y_test = train_test_split(features_total, labels_total, shuffle=True, test_size=0.30860534124)
 print(X_train.shape)
 print(X_test.shape)
 # Desordenar los datos de entrenamiento
